@@ -249,7 +249,7 @@ The `Purchase` provides a set of methods for interacting with the receipt store,
 
 . `isSubscribed([skus])`  - Checks to see if the user is subscribed to any of the provided skus.
 . `getExpiryDate([skus])` - Checks the expiry date for a set of skus.
-. `synchronizeReceipts()` - Synchronizes the receipts with the receipt store. This will try to submit any pending purchase receipts to the receipt store, and the reload receipts from the receipt store.
+. `synchronizeReceipts(milliSeconds)` - Synchronizes the receipts with the receipt store. This will try to submit any pending purchase receipts to the receipt store, and the reload receipts from the receipt store.
 
 In order for any of this to work, you must implement the `ReceiptStore` interface, and register it with the Buy instance. Your receipt store must implement two methods:
 
@@ -427,7 +427,6 @@ In order for your app to provide you with current data about the user's subscrip
 The following methods can be used for synchronization:
 
 . `synchronizeReceipts()` - Asynchronously synchronizes receipts in the background. You won't be notified when it's complete.
-. `synchronizeReceiptsSync()` - Synchronously synchronizes receipts, and blocks until it's complete. This is safe to use on the EDT as it employs `invokeAndBlock` under the covers.
 . `synchronizeReceipts(final long ifOlderThanMs, final SuccessCallback<Boolean> callback)` - Asynchronously synchronizes receipts, but only if they haven't been synchronized in the specified time. For example, In your start() method you might decide that you only want to synchronize receipts once per day. This also includes a callback that will be called when synchronization is complete.
 . `synchronizeReceiptsSync(long ifOlderThanMs)` - A synchronous version that will only refetch if data is older than given time.
 
@@ -578,7 +577,7 @@ public void itemPurchaseError(String sku, String errorMessage) {
 }
 ----
 
-Notice that, in `itemPurchased()` you don't need to explicitly create any receipts or submit anything to the receipt store. This is handled for you automatically. You do make a call to `synchronizeReceiptsSync()` but this is just to ensure that your toast message has the new expiry date loaded already.
+Notice that, in `itemPurchased()` you don't need to explicitly create any receipts or submit anything to the receipt store. This is handled for you automatically. You do make a call to `synchronizeReceiptsSync(long ifOlderthanMs)` but this is just to ensure that your toast message has the new expiry date loaded already.
 
 ==== Screenshots
 
